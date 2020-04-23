@@ -53,7 +53,7 @@ class GithubSpider(scrapy.Spider):
             )
 
     def parse(self, response):
-        for i, li in enumerate(response.xpath("//div[4]/main/div/div[3]/div/ul/li"), 1):
+        for li in response.xpath("//div[4]/main/div/div[3]/div/ul/li"):
             repository = li.xpath("./div[2]/div[1]/a/@href").extract_first()
             yield scrapy.Request(
                 self.get_stargazers(repository),
@@ -62,7 +62,7 @@ class GithubSpider(scrapy.Spider):
             )
 
     def parse_stargazers(self, response):
-        for i, li in enumerate(response.xpath("//div/div/main/div/div/div/ol/li"), 1):
+        for li in response.xpath("//div/div/main/div/div/div/ol/li"):
             user_profile = li.xpath("./div/h3/span/a/@href").extract_first()
             yield scrapy.Request(
                 self.get_absolute_url(user_profile),

@@ -8,4 +8,6 @@
 
 class GithubPipeline(object):
     def process_item(self, item, spider):
+        if spider.name == "github_spider":
+            print(item)
         return item
