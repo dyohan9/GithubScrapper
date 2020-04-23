@@ -1,6 +1,8 @@
 import scrapy
 from scrapy import FormRequest
 
+from github.items import GithubItem
+
 
 class GithubSpider(scrapy.Spider):
     name = "github_spider"
@@ -33,11 +35,12 @@ class GithubSpider(scrapy.Spider):
         )
 
     def start_crawler(self, response):
-        yield scrapy.Request(
-            "https://github.com/search?q=rasa",
-            meta=response.meta,
-            callback=self.parse_repositories_page,
-        )
+        for search in ["rasa", "spacy", "rocket", "machine+learning"]:
+            yield scrapy.Request(
+                f"https://github.com/search?q={search}",
+                meta=response.meta,
+                callback=self.parse_repositories_page,
+            )
 
     def parse_repositories_page(self, response):
         page = response.xpath('//div/main/div/div/div/div/div/a[@class="next_page"]')
@@ -86,7 +89,6 @@ class GithubSpider(scrapy.Spider):
             '//div/main/div/div/div/div/ul/li/a[@class="u-email "]/@href'
         )
         if len(email) > 0:
-            yield {
-                "name": "github",
-                "values": email.extract_first().replace("mailto:", ""),
-            }
+            item = GithubItem()
+            item["email"] = email.extract_first().replace("mailto:", "")
+            yield item
