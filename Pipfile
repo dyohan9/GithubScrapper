@@ -8,7 +8,7 @@ flake8 = "*"
 black = "==19.3b0"
 
 [packages]
-scrapy = "==2.0.1"
+scrapy = "==2.6.1"
 
 [requires]
 python_version = "3.6"
